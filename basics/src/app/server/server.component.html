@@ -1,0 +1,9 @@
+<!-- <h3>This is ServerComponent!</h3> -->
+***
+<p
+  [ngStyle]="{ backgroundColor: getColor() }"
+  [ngClass]="{ online: serverStatus === 'online' }"
+>
+  {{ "Server" }} with ID {{ serverId }} is {{ serverStatus }}
+</p>
+<br>

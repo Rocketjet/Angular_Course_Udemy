@@ -1,0 +1,45 @@
+<div class="container">
+  <app-cockpit
+    (srvCreated)="onServerAdded($event)"
+    (bpCreated)="onBlueprintAdded($event)"
+  ></app-cockpit>
+  <hr />
+  <div class="row">
+    <div class="col-xs-12">
+      <app-server-element
+        *ngFor="let serverElement of serverElements"
+        [srvElement]="serverElement"
+      >
+        <p #contentParagraph>
+          <strong *ngIf="serverElement.type === 'server'">{{
+            serverElement.content
+          }}</strong>
+          <em *ngIf="serverElement.type === 'blueprint'">{{
+            serverElement.content
+          }}</em>
+        </p>
+      </app-server-element>
+    </div>
+  </div>
+  <hr />
+  <hr />
+  <div class="row">
+    <div class="cols-xs-12">
+      <app-game-control
+        (intervalInit)="onIntervalInit($event)"
+      ></app-game-control>
+    </div>
+  </div>
+  <div class="row">
+    <div class="cols-xs-6">
+      <app-odd
+        *ngFor="let oddNumber of oddNumbers"
+        [number]="oddNumber"
+      ></app-odd>
+      <app-even
+        *ngFor="let evenNumber of evenNumbers"
+        [number]="evenNumber"
+      ></app-even>
+    </div>
+  </div>
+</div>

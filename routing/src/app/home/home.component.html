@@ -1,0 +1,15 @@
+<h4>Welcome to Server Manager 4.0</h4>
+<p>Manage your Servers and Users.</p>
+<hr>
+<button class="btn btn-success" (click)="onLogin()">
+  Login
+</button>
+<button class="btn btn-danger" (click)="onLogout()">
+  Logout
+</button>
+<h3 *ngIf="!onAuthCheck()">You are not logged in</h3>
+<h3 *ngIf="onAuthCheck()">You are logged in</h3>
+<hr>
+<button class="btn btn-primary" (click)="onLoadServers()">
+  Load Servers
+</button>
