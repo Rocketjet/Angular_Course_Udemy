@@ -14,7 +14,7 @@ export class HeaderComponent {
     this.storageService.saveRecipes();
   }
 
-  onLoadRecipes() {
-    this.storageService.loadRecipes()
+  onLoadData() {
+    this.storageService.loadRecipes().subscribe()
   }
 }
