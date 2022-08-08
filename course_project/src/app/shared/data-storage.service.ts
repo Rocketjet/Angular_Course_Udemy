@@ -15,7 +15,7 @@ export class DataStorageService {
     this.http.put('https://course-project-e0683-default-rtdb.europe-west1.firebasedatabase.app/recipes.json', recipes)
       .subscribe(res => {
         console.log(res);
-      });
+      }); //Зберігаємо рецепти в БД
   }
 
   loadRecipes() {
@@ -32,5 +32,5 @@ export class DataStorageService {
         tap(recipes => {
           this.recipeService.setRecipes(recipes);
         }));
-  }
+  }//Отримуємо рецепти з БД і передаєм в сервіс, де вони зберігаються і розподіляються
 }

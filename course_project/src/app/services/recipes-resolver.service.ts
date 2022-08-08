@@ -6,7 +6,7 @@ import { RecipeBookService } from './recipe-book.service';
 
 @Injectable({
   providedIn: 'root'
-})
+})// Цей резолвер нам потрібен для того, щоб при відкритті, наприклад, деталей рецепта і після перезавантаження сторінки, у нас не відображався порожній компонент. Резолвер буде викликатися перед переходом за адресою, до якої він застсований і виконувати відповідний код  
 export class RecipesResolverService implements Resolve<Recipe[]> {
   constructor(
     private storageService: DataStorageService,
@@ -14,8 +14,8 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const recipes = this.recipeService.getRecipes()
-    if (recipes.length === 0) {
+    const recipes = this.recipeService.getRecipes();
+    if (recipes.length === 0) { //Робимо перевірку для того, аби при редагуванні рецепту і перезавантаженні сторінки у нас зберігались зміни рецепту
       return this.storageService.loadRecipes();
     } else return recipes;
   }
