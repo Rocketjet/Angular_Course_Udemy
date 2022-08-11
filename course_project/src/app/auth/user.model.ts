@@ -5,8 +5,8 @@ export class User {
     private _token: string,
     private _tokenExperationDate: Date
   ) { }
-  get token() {
-    if (!this._tokenExperationDate || new Date > this._tokenExperationDate) {
+  get token() { //геттер для отримання токена
+    if (!this._tokenExperationDate || new Date > this._tokenExperationDate) { //перевірка на наявність терміну валідності і чи термін не сплив
       return null;
     }
     return this._token;

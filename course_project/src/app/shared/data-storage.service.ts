@@ -7,7 +7,7 @@ import { RecipeBookService } from '../services/recipe-book.service';
 @Injectable({ //дає можливість цьому сервісу бути використаним в іншому сервісі
   providedIn: 'root'
 })
-export class DataStorageService {
+export class DataStorageService {//Сервіс, який відповідає за збереження рецептів на бекенді і їх отримання звідти по запиту
   constructor(private http: HttpClient, private recipeService: RecipeBookService) { }
 
   saveRecipes() {
@@ -15,7 +15,7 @@ export class DataStorageService {
     this.http.put('https://course-project-e0683-default-rtdb.europe-west1.firebasedatabase.app/recipes.json', recipes)
       .subscribe(res => {
         console.log(res);
-      }); //Зберігаємо рецепти в БД
+      }); //Зберігаємо рецепти на бекенді
   }
 
   loadRecipes() {
@@ -23,7 +23,7 @@ export class DataStorageService {
       .pipe(
         map(recipes => {
           return recipes.map(recipe => {
-            return {
+            return { //для того, щоб зберегти правильну структуру об'єкта рецепту, так як ми можемо створити рецепт без інгредієнтів, і тоді така властивість додана в об'єкт не буде, робимо перевірку на наявність такої властивості. Якщо її немає, додаємо і ставимо як значення []
               ...recipe,
               ingredients: recipe.ingredients ? recipe.ingredients : []
             };
@@ -32,5 +32,5 @@ export class DataStorageService {
         tap(recipes => {
           this.recipeService.setRecipes(recipes);
         }));
-  }//Отримуємо рецепти з БД і передаєм в сервіс, де вони зберігаються і розподіляються
+  }//Отримуємо рецепти з бекенду і передаєм в сервіс, де вони зберігаються і розподіляються
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthResponseData, AuthService } from './auth.service';
 
@@ -13,7 +14,8 @@ export class AuthComponent implements OnInit {
   isLoading = false;
   error: string = null;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
+
   onSwitchMode() {
     this.loginMode = !this.loginMode;
   }
@@ -24,7 +26,7 @@ export class AuthComponent implements OnInit {
     }
     this.isLoading = true;
     const { email, password } = form.value;
-    let authObservable: Observable<AuthResponseData>;
+    let authObservable: Observable<AuthResponseData>; //Ця змінна потрібна, аби ми могли в одному місці підписатися на результат REST колу, чи то авторизації чи реєстрації
 
     if (this.loginMode) {
       authObservable = this.authService.signIn(email, password);
@@ -35,7 +37,7 @@ export class AuthComponent implements OnInit {
     authObservable.subscribe(
       res => {
         this.isLoading = false;
-        console.log(res);
+        this.router.navigate(['/recipes']);
       }, errorMessage => {
         console.log(errorMessage);
         this.isLoading = false;

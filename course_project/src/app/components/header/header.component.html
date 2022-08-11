@@ -8,7 +8,7 @@
     </div>
 
     <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" *ngIf="isAuthenticated">
         <li>
           <a routerLink="/recipes" routerLinkActive="active">
             Recipes
@@ -22,12 +22,17 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li>
+        <li *ngIf="!isAuthenticated">
           <a routerLink="/auth" routerLinkActive="active">
             Login
           </a>
         </li>
-        <li class="dropdown" appDropdown>
+        <li *ngIf="isAuthenticated">
+          <a routerLink="/auth" routerLinkActive="active">
+            Logout
+          </a>
+        </li>
+        <li class="dropdown" appDropdown *ngIf="isAuthenticated">
           <a class="dropdown-toggle" role="button">
             Manage<span class="caret"></span>
           </a>

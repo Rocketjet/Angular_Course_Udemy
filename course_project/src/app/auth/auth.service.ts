@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Subject, tap, throwError } from 'rxjs';
+import { catchError, BehaviorSubject, tap, throwError } from 'rxjs';
 import { User } from './user.model';
 
 export interface AuthResponseData {
@@ -16,10 +16,10 @@ export interface AuthResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = new Subject<User>();
+  user$ = new BehaviorSubject<User>(null);
   constructor(private http: HttpClient) { }
 
-  signUp(email: string, password: string) {//метод яким ми відправляємо дані для авторизації вперше (тобто реєструємось) до БД
+  signUp(email: string, password: string) {//метод яким ми відправляємо дані для авторизації на бекенд вперше (тобто реєструємось)
     return this.http.post<AuthResponseData>(
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCVIMqFQXDu7aJAiEFzsgar2J4nMHZ4BXw',
       {
@@ -27,33 +27,33 @@ export class AuthService {
         password,
         returnSecureToken: true
       }).pipe(
-        catchError(this.handleError),
+        catchError(this.handleError),//аналог такого запису --> error => this.handleError(error)
         tap(resData => this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn))
       );
   }
 
-  signIn(email: string, password: string) {
+  signIn(email: string, password: string) { //метод, яким ми логінимось як вже зареєстрований юзер
     return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCVIMqFQXDu7aJAiEFzsgar2J4nMHZ4BXw',
       {
         email,
         password,
         returnSecureToken: true
       }).pipe(
-        catchError(this.handleError),
+        catchError(this.handleError),//аналог такого запису --> error => this.handleError(error)
         tap(resData => this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn))
       );
   }
 
-  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {//Метод, який приймає відповідь з бекенду після REST колу і як side effect створює новий екземпляр класу User, який потім передається в Subject
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user$.next(user);
   }
 
-  private handleError(errorRes: HttpErrorResponse) {
+  private handleError(errorRes: HttpErrorResponse) {//Метод де ми централізовано обробляємо помилки чи то при реєстрації чи то при авторизації
     console.log(errorRes);
     let defError = 'An error occured!';
-    if (!errorRes.error || !errorRes.error.error) {
+    if (!errorRes.error || !errorRes.error.error) {//додаткова перевірка, у разі якщо повернеться помилка без ключа/вкладеного ключа error, тоді повернемо весь об'єкти помилки
       return throwError(errorRes);
     }
     switch (errorRes.error.error.message) {
