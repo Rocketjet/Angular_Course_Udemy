@@ -26,8 +26,8 @@ export class DataStorageService {//Сервіс, який відповідає �
   loadRecipes() {
     return this.authService.user$
       .pipe(
-        take(1),
-        exhaustMap(user => {
+        take(1),//дає можливість отримати по підписці дані вказану кількість разів і після автоматично відписатись
+        exhaustMap(user => {//чекає поки завершиться перший Observable (user$), отримує як параметр його дані і замінює його в ланцюгу Observables на внутрішній, тобто той, що буде повернуто викликом this.http.get().
           return this.http.get<Recipe[]>('https://course-project-e0683-default-rtdb.europe-west1.firebasedatabase.app/recipes.json',
             {
               params: new HttpParams().set('auth', user.token)
