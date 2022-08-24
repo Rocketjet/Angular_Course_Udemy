@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { exhaustMap, map, take, tap } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { Recipe } from '../components/recipes/recipes.model';
 import { RecipeBookService } from '../services/recipe-book.service';
 
@@ -8,7 +9,11 @@ import { RecipeBookService } from '../services/recipe-book.service';
   providedIn: 'root'
 })
 export class DataStorageService {//Сервіс, який відповідає за збереження рецептів на бекенді і їх отримання звідти по запиту
-  constructor(private http: HttpClient, private recipeService: RecipeBookService) { }
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeBookService,
+    private authService: AuthService
+  ) { }
 
   saveRecipes() {
     const recipes = this.recipeService.getRecipes();
@@ -19,8 +24,15 @@ export class DataStorageService {//Сервіс, який відповідає �
   }
 
   loadRecipes() {
-    return this.http.get<Recipe[]>('https://course-project-e0683-default-rtdb.europe-west1.firebasedatabase.app/recipes.json')
+    return this.authService.user$
       .pipe(
+        take(1),
+        exhaustMap(user => {
+          return this.http.get<Recipe[]>('https://course-project-e0683-default-rtdb.europe-west1.firebasedatabase.app/recipes.json',
+            {
+              params: new HttpParams().set('auth', user.token)
+            });
+        }),
         map(recipes => {
           return recipes.map(recipe => {
             return { //для того, щоб зберегти правильну структуру об'єкта рецепту, так як ми можемо створити рецепт без інгредієнтів, і тоді така властивість додана в об'єкт не буде, робимо перевірку на наявність такої властивості. Якщо її немає, додаємо і ставимо як значення []
