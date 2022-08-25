@@ -28,7 +28,7 @@
           </a>
         </li>
         <li *ngIf="isAuthenticated">
-          <a routerLink="/auth" routerLinkActive="active">
+          <a routerLink="/auth" routerLinkActive="active" (click)="onLogout()">
             Logout
           </a>
         </li>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { RecipesComponent } from './components/recipes/recipes.component';
@@ -18,6 +18,7 @@ import { RecipeEditComponent } from './components/recipes/recipe-edit/recipe-edi
 import { RecipeBookService } from './services/recipe-book.service';
 import { AuthComponent } from './auth/auth.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [ //компоненти
@@ -42,7 +43,9 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     FormsModule,
     ReactiveFormsModule
   ], //модулі
-  providers: [ShoppingListService, RecipeBookService], //сервіси
+  providers: [ShoppingListService, RecipeBookService, {
+    provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true
+  }], //сервіси
   bootstrap: [AppComponent],
 })
 export class AppModule { }

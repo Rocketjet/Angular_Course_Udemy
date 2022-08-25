@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, BehaviorSubject, tap, throwError } from 'rxjs';
 import { User } from './user.model';
 
@@ -17,7 +18,11 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user$ = new BehaviorSubject<User>(null);//BehaviorSubject - дає підписникам негайний доступ до попереднього емітованого значення навіть якщо вони не були підписані на нього на момент його випуску. В нашому випадку ми отримаємо доступ до об'єкта User, який є залогінений в поточний момент навіть якщо ми підпишемось на нього після того, як то об'єкт був емітований. 
-  constructor(private http: HttpClient) { }
+  private tokenExpirationTimer;
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) { }
 
   signUp(email: string, password: string) {//метод яким ми відправляємо дані для авторизації на бекенд вперше (тобто реєструємось)
     return this.http.post<AuthResponseData>(
@@ -44,13 +49,48 @@ export class AuthService {
       );
   }
 
-  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {//Метод, який приймає відповідь з бекенду після REST колу і як side effect створює новий екземпляр класу User, який потім передається в BehaviorSubject
+  logout() {
+    this.user$.next(null);
+    this.router.navigate(['/auth']);
+
+    localStorage.removeItem('userData');//очищаємо дані при вилогіненні
+
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogin() { //метод, який логінить поточного юзера, який збережений в localStorage, автоматично
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (!userData) {
+      return;
+    }
+    const { email, id, _token, _tokenExpirationDate } = userData;
+    const loadedUser = new User(email, id, _token, new Date(_tokenExpirationDate));
+
+    if (loadedUser.token) {//перевірка на те, чи у юзера є валідний токен через виклик getter'a
+      this.user$.next(loadedUser);
+      const expirationDuration = new Date(_tokenExpirationDate).getTime() - new Date().getTime();
+      this.autoLogout(expirationDuration);
+    }
+  }
+
+  autoLogout(expirationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => this.logout(), expirationDuration);
+  }
+
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {//метод, який приймає відповідь з бекенду після REST колу і як side effect створює новий екземпляр класу User, який потім передається в BehaviorSubject
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user$.next(user);
+
+    this.autoLogout(expiresIn * 1000);
+
+    localStorage.setItem('userData', JSON.stringify(user));//зберігаємо дані поточного юзера в localStorage
   }
 
-  private handleError(errorRes: HttpErrorResponse) {//Метод де ми централізовано обробляємо помилки чи то при реєстрації чи то при авторизації
+  private handleError(errorRes: HttpErrorResponse) {//метод де ми централізовано обробляємо помилки чи то при реєстрації чи то при авторизації
     console.log(errorRes);
     let defError = 'An error occured!';
     if (!errorRes.error || !errorRes.error.error) {//додаткова перевірка, у разі якщо повернеться помилка без ключа/вкладеного ключа error, тоді повернемо весь об'єкти помилки
