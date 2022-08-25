@@ -44,7 +44,9 @@ export class PostsService {
     searchParams = searchParams.append('custom', 'key'); */
     //!Код вище дає можливість додати більше одного параметра в params. При цьому додано буде обидва параметра, вони не замінятимуть один одного
     // params: searchParams
-    return this.http.get<{ [key: string]: Post; }>('https://ng-complete-guide-f6bd5-default-rtdb.europe-west1.firebasedatabase.app/posts.json', {
+    return this.http.get<{ [key: string]: Post; }>(
+      'https://ng-complete-guide-f6bd5-default-rtdb.europe-west1.firebasedatabase.app/posts.json',
+      {
       headers: new HttpHeaders({ 'Custon-Header': 'Hello' }),
       params: new HttpParams().set('print', 'pretty') //до URL буде додано вкінці ?print=pretty. Цей параметр форматує Response
     })

@@ -16,7 +16,7 @@ export interface AuthResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = new BehaviorSubject<User>(null);
+  user$ = new BehaviorSubject<User>(null);//BehaviorSubject - дає підписникам негайний доступ до попереднього емітованого значення навіть якщо вони не були підписані на нього на момент його випуску. В нашому випадку ми отримаємо доступ до об'єкта User, який є залогінений в поточний момент навіть якщо ми підпишемось на нього після того, як то об'єкт був емітований. 
   constructor(private http: HttpClient) { }
 
   signUp(email: string, password: string) {//метод яким ми відправляємо дані для авторизації на бекенд вперше (тобто реєструємось)
@@ -44,7 +44,7 @@ export class AuthService {
       );
   }
 
-  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {//Метод, який приймає відповідь з бекенду після REST колу і як side effect створює новий екземпляр класу User, який потім передається в Subject
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {//Метод, який приймає відповідь з бекенду після REST колу і як side effect створює новий екземпляр класу User, який потім передається в BehaviorSubject
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user$.next(user);
