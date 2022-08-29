@@ -62,16 +62,25 @@ export class AuthService {
   }
 
   autoLogin() { //метод, який логінить поточного юзера, який збережений в localStorage, автоматично
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData: {
+      email: string,
+      id: string,
+      _token: string,
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem('userData'));
     if (!userData) {
       return;
     }
-    const { email, id, _token, _tokenExpirationDate } = userData;
-    const loadedUser = new User(email, id, _token, new Date(_tokenExpirationDate));
+
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate));
 
     if (loadedUser.token) {//перевірка на те, чи у юзера є валідний токен через виклик getter'a
       this.user$.next(loadedUser);
-      const expirationDuration = new Date(_tokenExpirationDate).getTime() - new Date().getTime();
+      const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
       this.autoLogout(expirationDuration);
     }
   }

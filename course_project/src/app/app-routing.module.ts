@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
 import { RecipeDetailsComponent } from './components/recipes/recipe-details/recipe-details.component';
 import { RecipeEditComponent } from './components/recipes/recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from './components/recipes/recipe-start/recipe-start.component';
@@ -13,6 +14,7 @@ const routes: Routes = [
   {
     path: 'recipes',
     component: RecipesComponent,
+    canActivate: [AuthGuard],
     children: [//потрібно пам'ятати, що порядок {path} важливий, динамічні параметри в кінці масиву повинні бути, щоб шлях правильно парсився
       {
         path: '',

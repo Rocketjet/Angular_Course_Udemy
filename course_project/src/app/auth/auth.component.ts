@@ -44,7 +44,7 @@ export class AuthComponent implements OnInit {
         this.error = errorMessage;
       });
 
-    form.reset();
+    form.reset();//для очистки полів форми
   }
 
   ngOnInit(): void {
