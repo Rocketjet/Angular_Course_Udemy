@@ -19,6 +19,7 @@ import { RecipeBookService } from './services/recipe-book.service';
 import { AuthComponent } from './auth/auth.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [ //компоненти
@@ -35,6 +36,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     RecipeEditComponent,
     AuthComponent,
     SpinnerComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,12 @@
 <div class="row auth-wrapper">
   <div class="col-xs-12">
-    <div
+    <!-- <div
       class="alert alert-danger"
       *ngIf="error"
     >
       {{ error }}
-    </div>
+    </div> -->
+    <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
     <form
       #authForm="ngForm"
       (ngSubmit)="onSubmit(authForm)" 

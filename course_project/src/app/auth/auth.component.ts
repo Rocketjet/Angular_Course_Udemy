@@ -34,17 +34,27 @@ export class AuthComponent implements OnInit {
       authObservable = this.authService.signUp(email, password);
     }
 
-    authObservable.subscribe(
-      res => {
+    authObservable.subscribe({
+      next: (res) => {
         this.isLoading = false;
         this.router.navigate(['/recipes']);
-      }, errorMessage => {
-        console.log(errorMessage);
+      },
+      error: (errorMessage) => {
+        this.error = errorMessage;//ця змінна непотрібна, якщо викор. showAErrorAlert()
+        this.showAErrorAlert(errorMessage);
         this.isLoading = false;
-        this.error = errorMessage;
-      });
+      }
+    });
 
     form.reset();//для очистки полів форми
+  }
+
+  onHandleError() {
+    this.error = null;
+  }
+
+  private showAErrorAlert(message: string) {//Метод, в якому ми програмно, з коду, будемо викликати наш компонент AlertComponent
+
   }
 
   ngOnInit(): void {
