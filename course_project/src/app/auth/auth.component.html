@@ -1,3 +1,4 @@
+<ng-template appCmpPlaceholder></ng-template>
 <div class="row auth-wrapper">
   <div class="col-xs-12">
     <!-- <div
@@ -6,7 +7,7 @@
     >
       {{ error }}
     </div> -->
-    <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
+    <!-- <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert> -->
     <form
       #authForm="ngForm"
       (ngSubmit)="onSubmit(authForm)" 

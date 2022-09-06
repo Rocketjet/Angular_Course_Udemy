@@ -20,9 +20,10 @@ import { AuthComponent } from './auth/auth.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AlertComponent } from './components/alert/alert.component';
+import { CmpPlaceholderDirective } from './shared/cmp-placeholder.directive';
 
 @NgModule({
-  declarations: [ //компоненти
+  declarations: [ //компоненти, директиви, пайпи
     AppComponent,
     ShoppingListComponent,
     RecipesComponent,
@@ -37,6 +38,7 @@ import { AlertComponent } from './components/alert/alert.component';
     AuthComponent,
     SpinnerComponent,
     AlertComponent,
+    CmpPlaceholderDirective,
   ],
   imports: [
     BrowserModule,
