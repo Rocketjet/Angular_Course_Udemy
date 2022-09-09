@@ -64,15 +64,14 @@ export class AuthComponent implements OnDestroy {
   private showErrorAlert(message: string) {//Метод, в якому ми програмно, з коду, будемо викликати наш компонент AlertComponent
     const alertCmpFactory = this.cmpFactoryResolver.resolveComponentFactory(AlertComponent);// цей метод повертатиме не сам компонент а лише "фабрику" для цього компонента, тобто це по суті об'єкт, який знає, як створити AlertComponent
 
-    const hostViewContainerRef = this.alertHost.vcRef; //зберігаємо в змінній посилання на об'єкт ViewContainerRef, який в свою чергу дає можливість взаємодіяти з місцем в нашому DOM це додана директива, яка записана в властивість alertHost
+    const hostViewContainerRef = this.alertHost.vcRef; //зберігаємо в змінній посилання на об'єкт ViewContainerRef, який в свою чергу дає можливість взаємодіяти з місцем в нашому DOM де додана директива, яка записана в властивість alertHost
 
     hostViewContainerRef.clear();//очищає всі компоненти, які були відрендерені в тому місці DOM раніше
     const cmpRef = hostViewContainerRef.createComponent(alertCmpFactory);
     // hostViewContainerRef.createComponent<AlertComponent>(AlertComponent); - //?сучасний спосіб створення компонента без ComponentFactoryResolver, хоч і попередінй варіант досі працює
 
     cmpRef.instance.message = message;// instance дає доступ до конкретного екземпляру компонета який було створено і записано в cmpRef4 
-    this.closeSub = cmpRef.instance.close.subscribe((params) => {
-      this.closeSub.unsubscribe();
+    this.closeSub = cmpRef.instance.close.subscribe(() => {//так як close --> EventEmitter, підписуємось на подію і коли вона станеться, ми розумітимемо, що компонет вже не відображається
       hostViewContainerRef.clear();
     });
   }
