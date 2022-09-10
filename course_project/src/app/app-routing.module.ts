@@ -15,7 +15,7 @@ const routes: Routes = [
     path: 'recipes',
     component: RecipesComponent,
     canActivate: [AuthGuard],
-    children: [//потрібно пам'ятати, що порядок {path} важливий, динамічні параметри в кінці масиву повинні бути, щоб шлях правильно парсився
+    children: [//потрібно пам'ятати, що порядок {path} важливий, динамічні параметри повинні бути в кінці масиву, щоб шлях правильно парсився
       {
         path: '',
         component: RecipeStartComponent
@@ -41,8 +41,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  //NgModule трансформує звичайни TypeScript клас в модуль Angular
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  //NgModule трансформує звичайний TypeScript клас в модуль Angular
+  imports: [RouterModule.forRoot(routes)], //в вбудований модуль RouterModule ми передаємо свою конфігурацію шляхів
+  exports: [RouterModule], //і тут ми цей сконфігурований модуль експортуємо, щоб потім імпортувати і використати в основному модулі AppModule
 })
 export class AppRoutingModule { }

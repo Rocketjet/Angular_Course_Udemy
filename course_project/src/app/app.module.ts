@@ -23,7 +23,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { CmpPlaceholderDirective } from './shared/cmp-placeholder.directive';
 
 @NgModule({
-  declarations: [ //компоненти, директиви, пайпи
+  declarations: [ //компоненти, директиви, кастомні пайпи
     AppComponent,
     ShoppingListComponent,
     RecipesComponent,
@@ -46,10 +46,10 @@ import { CmpPlaceholderDirective } from './shared/cmp-placeholder.directive';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule
-  ], //модулі
+  ], //інші модулі
   providers: [ShoppingListService, RecipeBookService, {
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true
   }], //сервіси
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent], //тут вказується компонент, який є головним і який буде вказаний в index.html
 })
 export class AppModule { }
