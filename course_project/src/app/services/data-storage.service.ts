@@ -1,18 +1,16 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { exhaustMap, map, take, tap } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { map, tap } from 'rxjs';
 import { Recipe } from '../components/recipes/recipes.model';
-import { RecipeBookService } from '../services/recipe-book.service';
+import { RecipeBookService } from './recipe-book.service';
 
 @Injectable({ //дає можливість цьому сервісу бути використаним в іншому сервісі
-  providedIn: 'root'
+  providedIn: 'root'//ця опція говорить, що цей сервіс буде автоматично додано в головний модуль і тому цей сервіс буде доступний у всього веб застосунку
 })
 export class DataStorageService {//Сервіс, який відповідає за збереження рецептів на бекенді і їх отримання звідти по запиту
   constructor(
     private http: HttpClient,
     private recipeService: RecipeBookService,
-    private authService: AuthService
   ) { }
 
   saveRecipes() {
