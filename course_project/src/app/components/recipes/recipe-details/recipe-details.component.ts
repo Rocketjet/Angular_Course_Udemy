@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeBookService } from 'src/app/services/recipe-book.service';
 import { Recipe } from '../recipes.model';
@@ -8,7 +8,7 @@ import { Recipe } from '../recipes.model';
   templateUrl: './recipe-details.component.html',
   styleUrls: ['./recipe-details.component.scss'],
 })
-export class RecipeDetailsComponent implements DoCheck, OnInit {
+export class RecipeDetailsComponent implements OnInit {
   recipe: Recipe;
   id: number;
 
@@ -23,9 +23,6 @@ export class RecipeDetailsComponent implements DoCheck, OnInit {
       this.id = +params['id'];
       this.recipe = this.recipeService.getRecipe(this.id);
     });
-  }
-  ngDoCheck(): void {
-    // this.recipe;
   }
 
   onAddToShoppingList() {
