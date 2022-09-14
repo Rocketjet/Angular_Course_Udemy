@@ -8,7 +8,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [ //компоненти, директиви, кастомні пайпи
+  declarations: [ //компоненти, директиви, кастомні пайпи, які належать до цього модуля
     AppComponent,
     HeaderComponent,
   ],
@@ -17,7 +17,7 @@ import { SharedModule } from './shared/shared.module';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
-  ], //інші модулі
+  ], //інші модулі, які ми імпортуємо в поточний модуль
   providers: [{
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true
   }], //сервіси
