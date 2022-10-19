@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, BehaviorSubject, tap, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 
 export interface AuthResponseData {
@@ -26,7 +27,7 @@ export class AuthService {
 
   signUp(email: string, password: string) {//метод яким ми відправляємо дані для авторизації на бекенд вперше (тобто реєструємось)
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCVIMqFQXDu7aJAiEFzsgar2J4nMHZ4BXw',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
       {
         email,
         password,
@@ -38,7 +39,7 @@ export class AuthService {
   }
 
   signIn(email: string, password: string) { //метод, яким ми логінимось як вже зареєстрований юзер
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCVIMqFQXDu7aJAiEFzsgar2J4nMHZ4BXw',
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey,
       {
         email,
         password,
