@@ -1,0 +1,240 @@
+Sometimes the question arises whether it is possible to use a web component created with Angular Elements in a native web app.
+
+The answer: It's possible, but not very useful, considering the resulting file size.
+
+Let's say we want to create a native web component from this Angular component (which is just an arbitrary example containing a little HTML, CSS, and JS with property and event binding):
+
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+ 
+@Component({
+  template: `
+    <input
+      [disabled]="isDisabled"
+      [placeholder]="placeholderText"
+      [ngStyle]="{ borderBottomColor: isDisabled ? 'auto' : borderColor }"
+      (input)="keystrokeDetected.emit($event)"
+    >`,
+  styles: [`
+    input {
+      border: none;
+      outline: none;
+      width: 300px;
+      padding-bottom: 10px;
+      border-bottom: 5px solid lightgrey;
+    }
+  `]
+})
+export class CustomInputComponent implements OnInit {
+ 
+  @Input() borderColor: string;
+  @Output() keystrokeDetected = new EventEmitter();
+ 
+  isDisabled = true;
+  placeholderText = 'Please wait ...';
+ 
+  ngOnInit() {
+    setTimeout(() => {
+      this.isDisabled = false;
+      this.placeholderText = 'Now you can start to write!';
+    }, 3000);
+  }
+ 
+}
+
+
+1.
+
+Make sure that you've the latest Angular CLI installed, by running npm i -g @angular/cli.
+
+
+
+2.
+
+Create a new project with ng new custom-input.
+
+
+
+3.
+
+Add Angular Elements to this project with ng add @angular/elements.
+
+
+
+4.
+
+Replace the content of the app folder with these 2 files only:
+
+custom-input.component.ts
+
+custom-input.module.ts
+
+
+
+5.
+
+Use the code above for the component file, and the following one for the module file:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+ 
+import { CustomInputComponent } from './custom-input.component';
+ 
+@NgModule({
+  declarations: [ CustomInputComponent ],
+  imports: [ BrowserModule ]
+})
+export class CustomInputModule {
+ 
+  constructor(private injector: Injector) {}
+ 
+  ngDoBootstrap() {
+    customElements.define(
+      'custom-input',
+      createCustomElement(CustomInputComponent, {injector: this.injector})
+    );
+  }
+ 
+}
+
+
+6.
+
+Point to the module in main.ts, since it's our bootstrapping module:
+
+...
+platformBrowserDynamic().bootstrapModule(CustomInputModule)
+...
+
+
+7.
+
+Write this test code for our web component in index.html:
+
+<body>
+  <custom-input border-color="green"></custom-input>
+    <script>
+      const customInput = document.querySelector('custom-input');
+      const logKeystroke = event => console.log(`Keystroke detected in index.html: "${event.detail.data}"`);
+      customInput.addEventListener('keystrokeDetected', logKeystroke);
+  </script>
+</body>
+
+
+8.
+
+Test the component by running ng s -o.
+
+
+
+9.
+
+For preparing the build add a small file at root level of your project:
+
+concat-files.js
+
+const concat = require('concat');
+ 
+const bundles = [
+  './dist/custom-input/runtime-es2015.js',
+  './dist/custom-input/polyfills-es2015.js',
+  './dist/custom-input/main-es2015.js'
+];
+ 
+concat(bundles, './dist/custom-input.js');
+
+
+10.
+
+Run ...
+
+npm i concat
+
+... for installing the package which is used in that file, and then run ...
+
+ng build --prod --output-hashing=none && node ./concat-files.js
+
+... for creating and concatenating the bundles.
+
+
+
+11.
+
+Take the newly created custom-input.js file from the dist folder, and move it into a small non-Angular project based on this index.html:
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Input</title>
+</head>
+ 
+<body>
+ 
+  <custom-input border-color="green"></custom-input>
+	
+  <script src="custom-input.js"></script>
+	
+  <script>
+    const customInput = document.querySelector('custom-input');
+    const logKeystroke = event => console.log(`Keystroke detected in index.html: "${event.detail.data}"`);
+    customInput.addEventListener('keystrokeDetected', logKeystroke);
+  </script>
+	
+</body>
+</html>
+
+
+12.
+
+Run this new index.html file directly from the file system (via double click). Our component should work in this native environment in the same way like in our Angular project.
+
+The approach above should work fine, but please note that our custom-input.js file created by Angular has a size of 160 KB, since it contains a lot of unnecessary code.
+
+If we implement the custom-input.js file without Angular, it has less than 1 KB (unminified), and works exactly the same:
+
+customElements.define(
+ 
+  'custom-input',
+ 
+  class CustomInput extends HTMLElement {
+ 
+    constructor() {
+ 
+      super();
+      this.attachShadow({ mode: 'open' });
+      this.borderColor = this.getAttribute('border-color');
+      
+      this.shadowRoot.innerHTML = `
+        <style>
+          input {
+            border: none;
+            outline: none;
+            width: 300px;
+            padding-bottom: 10px;
+            border-bottom: 5px solid lightgrey;
+          }
+        </style>
+        <input disabled placeholder="Please wait ...">
+      `;
+      
+      const input = this.shadowRoot.querySelector('input');
+ 
+      input.addEventListener(
+        'input', 
+        event => this.dispatchEvent(new CustomEvent('keystrokeDetected', { detail: { data: event.data } }))
+      );
+ 
+      setTimeout(() => {
+        input.disabled = false;
+        input.placeholder = 'Now you can start to write!';
+        input.style.borderColor = this.borderColor;
+      }, 3000);
+ 
+    }
+ 
+  }
+ 
+);
