@@ -30,8 +30,13 @@
               email
               ngModel
               #email="ngModel"
+              appEmailValidator
             />
-            <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email</span>
+            <div class="help-block" *ngIf="!email.valid && email.touched">
+              <span>Email is invalid</span>
+              <span class="help-block" *ngIf="email.errors?.invalidEmail">It should not have "test" inside</span>
+            </div>
+            
           </div>
         </div>
         <p *ngIf="!userData.valid && userData.touched">User data is invalid!</p>
