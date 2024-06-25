@@ -1,32 +1,32 @@
-import { Component, ViewChild } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { Component, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  @ViewChild("f") signupForm: NgForm;
-  @ViewChild("email") emailInput: NgForm;
+  @ViewChild('f') signUpForm: NgForm;
+  @ViewChild('email') emailInput: NgForm;
 
-  defaultQuestion = "pet";
-  defaultUserName = "";
-  answer = "";
-  genders = ["male", "female"];
+  defaultQuestion = 'pet';
+  defaultUserName = '';
+  answer = '';
+  genders = ['male', 'female'];
   submitted = false;
   user = {
-    username: "",
-    email: "",
-    secretQuestion: "pet",
-    answer: "",
-    gender: "",
+    username: '',
+    email: '',
+    secretQuestion: 'pet',
+    answer: '',
+    gender: '',
   };
 
   suggestUserName() {
-    const suggestedName = "Superuser";
+    const suggestedName = 'Superuser';
     //patchValue() і setValue() доступні лише на формі, яка обгорнута в ngForm
-    /* this.signupForm.setValue({ //setValue() перезапише всі дані
+    /* this.signUpForm.setValue({ //setValue() перезапише всі дані
       userData: {
         username: suggestedName,
         email: "admin@gmail.com"
@@ -36,15 +36,15 @@ export class AppComponent {
       gender: "male"
     }) */
     //це не найкращий спосіб задати потрібні значення полям форми, так як якщо там вже були введені якісь значення раніше, вони будуть перезаписані
-    this.signupForm.form.patchValue({
+    this.signUpForm.form.patchValue({
       //patchValue() дає можливість перезаписати дані, які ми хочемо
       userData: {
         username: suggestedName,
-        email: "test@gmail.com",
+        email: 'test@gmail.com',
       },
-      secretQuestion: "pet",
-      questionAnswer: "Funny",
-      gender: "male",
+      secretQuestion: 'pet',
+      questionAnswer: 'Funny',
+      gender: 'male',
     });
   }
 
@@ -53,15 +53,15 @@ export class AppComponent {
   } */
 
   onSubmit() {
-    console.log(this.signupForm);
+    console.log(this.signUpForm);
     // console.log(this.emailInput);
     this.submitted = true;
-    this.user.username = this.signupForm.value.userData.username;
-    this.user.email = this.signupForm.value.userData.email;
-    this.user.secretQuestion = this.signupForm.value.secret;
-    this.user.answer = this.signupForm.value.questionAnswer;
-    this.user.gender = this.signupForm.value.gender;
+    this.user.username = this.signUpForm.value.userData.username;
+    this.user.email = this.signUpForm.value.userData.email;
+    this.user.secretQuestion = this.signUpForm.value.secret;
+    this.user.answer = this.signUpForm.value.questionAnswer;
+    this.user.gender = this.signUpForm.value.gender;
 
-    this.signupForm.reset(); //цей метод не тільки очищає поля форми, а і також всі вбудовані властивості форми, як от valid, touched і так далі
+    this.signUpForm.reset(); //цей метод не тільки очищає поля форми, а і також всі вбудовані властивості форми, як от valid, touched і так далі
   }
 }

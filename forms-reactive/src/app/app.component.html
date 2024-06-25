@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
         <div formGroupName="userData">
           <div class="form-group">
             <label for="username">Username</label>
@@ -14,17 +14,17 @@
             <span
               class="help-block"
               *ngIf="
-                !signupForm.get('userData.username').valid &&
-                signupForm.get('userData.username').touched
+                !signUpForm.get('userData.username').valid &&
+                signUpForm.get('userData.username').touched
               "
               ><span
                 *ngIf="
-                  signupForm.get('userData.username').errors['nameIsForbidden']
+                  signUpForm.get('userData.username').errors['nameIsForbidden']
                 "
                 >This name is invalid</span
               >
               <span
-                *ngIf="signupForm.get('userData.username').errors['required']"
+                *ngIf="signUpForm.get('userData.username').errors['required']"
                 >This field is required!</span
               >
             </span>
@@ -40,8 +40,8 @@
             <span
               class="help-block"
               *ngIf="
-                !signupForm.get('userData.username').valid &&
-                signupForm.get('userData.email').touched
+                !signUpForm.get('userData.username').valid &&
+                signUpForm.get('userData.email').touched
               "
               >Please enter a valid email!</span
             >
@@ -76,8 +76,8 @@
         <span
           class="help-block"
           *ngIf="
-            !signupForm.get('hobbies').valid &&
-            signupForm.get('hobbies').touched
+            !signUpForm.get('hobbies').valid &&
+            signUpForm.get('hobbies').touched
           "
         >
           Please enter a valid data!

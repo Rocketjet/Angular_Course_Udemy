@@ -9,11 +9,11 @@ import { Observable } from "rxjs";
 })
 export class AppComponent implements OnInit {
   genders = ["male", "female"];
-  signupForm: FormGroup;
+  signUpForm: FormGroup;
   forbiddenUsernames = ["Chris", "Anna"];
 
   ngOnInit() {
-    this.signupForm = new FormGroup({
+    this.signUpForm = new FormGroup({
       userData: new FormGroup({
         username: new FormControl(null, [
           Validators.required,
@@ -29,29 +29,29 @@ export class AppComponent implements OnInit {
       hobbies: new FormArray([]),
     });
 
-    this.signupForm.valueChanges.subscribe((value) => {
+    this.signUpForm.valueChanges.subscribe((value) => {
       console.log(value);
     }); //повертає {} з заданими нами властивостями в коді і значеннями, які ми змінюємо, тобто якщо ми в полі username будемо вводити текст, то на кожну введену дукву ми отримуватимемо новий {} з оновленим значенням поля
 
-    /* this.signupForm.statusChanges.subscribe((status) => {
+    /* this.signUpForm.statusChanges.subscribe((status) => {
       console.log(status); //INVALID або VALID
     }); */
   }
 
   onSubmit() {
-    console.log(this.signupForm);
+    console.log(this.signUpForm);
   }
 
   onAddHobby() {
     const control = new FormControl(null, Validators.required);
-    (<FormArray>this.signupForm.get("hobbies")).push(control);
-    console.log(this.signupForm)
+    (<FormArray>this.signUpForm.get("hobbies")).push(control);
+    console.log(this.signUpForm);
   }
 
   get hobbyControls() {
-    return (this.signupForm.get("hobbies") as FormArray).controls;
+    return (this.signUpForm.get("hobbies") as FormArray).controls;
   }
-  
+
   //!КАСТОМНИЙ ВАЛІДАТОР
   forbiddenNames(control: FormControl): { [s: string]: boolean } {
     //Він перевірятиме, чи введені користувачем дані == одному з імен в масиві forbiddenUsernames. Ця функція буде викликатись автоматично в той момент, коли Angular перевіряє валідність поля форми
