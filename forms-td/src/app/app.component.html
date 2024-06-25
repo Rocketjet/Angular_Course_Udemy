@@ -26,8 +26,9 @@
               id="email"
               class="form-control"
               required
+              name="email"
               email
-              ngModel name="email"
+              ngModel
               #email="ngModel"
             />
             <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email</span>
@@ -39,8 +40,8 @@
           <select
             id="secret"
             class="form-control"
-            [ngModel]="defaultQuestion"
             name="secret"
+            [ngModel]="defaultQuestion"
           >
             <option value="pet">Your first Pet?</option>
             <option value="teacher">Your first teacher?</option>
