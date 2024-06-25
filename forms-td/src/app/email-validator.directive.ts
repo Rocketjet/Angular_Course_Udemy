@@ -1,0 +1,16 @@
+import { Directive } from '@angular/core';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
+
+@Directive({
+  selector: '[appEmailValidator]',
+  providers: [{
+    provide: NG_VALIDATORS, //Injection token
+    useExisting: EmailValidatorDirective,
+    multi: true
+  }],
+})
+export class EmailValidatorDirective implements Validator {
+  validate(control: AbstractControl): ValidationErrors | null {
+    return;
+  }
+}
