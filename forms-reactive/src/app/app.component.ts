@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
 
     this.signUpForm.valueChanges.subscribe((value) => {
       console.log(value);
-    }); //повертає {} з заданими нами властивостями в коді і значеннями, які ми змінюємо, тобто якщо ми в полі username будемо вводити текст, то на кожну введену дукву ми отримуватимемо новий {} з оновленим значенням поля
+    }); //повертає {} з заданими нами властивостями в коді і значеннями, які ми змінюємо, тобто якщо ми в полі username будемо вводити текст, то на кожну введену букву ми отримуватимемо новий {} з оновленим значенням поля
 
     /* this.signUpForm.statusChanges.subscribe((status) => {
       console.log(status); //INVALID або VALID
